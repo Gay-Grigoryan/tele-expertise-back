@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String      @id @default(cuid())
+  type        user_types
+  name        String      @db.VarChar(127)
+  email       String      @unique @db.VarChar(127)
+  password    String      @db.VarChar(127)
+  phone       String      @unique @db.VarChar(127)
+  created_at  DateTime    @default(now())
+  super_admin SuperAdmin?
+  doctor      Doctor?
+
+  @@map("users")
+}
+
+model SuperAdmin {
+  id   String @id @db.VarChar(63)
+  user User   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "super_admin_user_fk0")
+
+  @@map("super_admins")
+}
+
+model Country {
+  id     Int    @id @default(autoincrement())
+  name   String @db.VarChar(127)
+  cities City[]
+
+  @@map("countries")
+}
+
+model City {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(127)
+  country_id Int
+  country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "city_country_fk0")
+  hospitals  Hospital[]
+
+  @@map("cities")
+}
+
+model Hospital {
+  id      Int      @id @default(autoincrement())
+  name    String   @db.VarChar(127)
+  city_id Int
+  city    City     @relation(fields: [city_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "hospital_city_fk0")
+  doctors Doctor[]
+
+  @@map("hospitals")
+}
+
+model Doctor {
+  id                String     @id @db.VarChar(63)
+  user              User       @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "doctor_user_fk0")
+  hospital_id       Int
+  hospital          Hospital   @relation(fields: [hospital_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "doctor_hospital_fk0")
+  profession_id     Int
+  profession        Profession @relation(fields: [profession_id], references: [id])
+  sent_messages     Message[]  @relation("sender")
+  received_messages Message[]  @relation("receiver")
+
+  @@map("doctors")
+}
+
+model Profession {
+  id      Int      @id @default(autoincrement())
+  name    String   @db.VarChar(127)
+  doctors Doctor[]
+
+  @@map("professions")
+}
+
+model Message {
+  id          Int           @id @default(autoincrement())
+  message     String?       @db.Text
+  sender_id   String
+  sender      Doctor        @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "message_doctor_fk1")
+  receiver_id String
+  receiver    Doctor        @relation("receiver", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "message_doctor_fk2")
+  type        message_types
+  is_seen     Boolean       @default(false)
+  date        DateTime      @default(now())
+  files       MessageFile[]
+
+  @@map("chat_messages")
+}
+
+model MessageFile {
+  id         Int     @id @default(autoincrement())
+  message_id Int
+  message    Message @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "message_file_message_fk0")
+  file       String  @db.VarChar(127)
+
+  @@map("chat_messages_files")
+}
+
+enum message_types {
+  text
+  file
+}
+
+enum user_types {
+  doctor
+  super_admin
+}

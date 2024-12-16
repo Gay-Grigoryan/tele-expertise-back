@@ -1,0 +1,71 @@
+stages:    
+  - build
+  - deploy
+  - deployToTesting
+
+cache:
+  paths:
+    - node_modules
+    - dist/
+    - .env
+
+
+
+build:
+  stage: build
+  tags:
+    - backend
+  before_script:
+    - echo "JWT_SECRET='$GL_JWT_SECRET'" > .env
+    - echo "DEFAULT_TICKETS_COUNT=$GL_DEFAULT_TICKETS_COUNT" >> .env
+    - echo "EMAIL_USER='$GL_EMAIL_USER'" >> .env
+    - echo "EMAIL_PASS='$GL_EMAIL_PASS'" >> .env
+    - echo "IDRAM_ID='$GL_IDRAM_ID'" >> .env
+    - echo "IDRAM_SECRET_KEY='$GL_IDRAM_SECRET_KEY'" >> .env
+    - echo "GOOGLE_CLOUD_MAIN_SERVICE='$GL_GOOGLE_CLOUD_MAIN_SERVICE'" >> .env
+  script:
+    - npm install
+    - npx prisma generate
+    - npm run build
+  artifacts:
+    paths:
+      - .env
+
+
+deploy:
+  stage: deploy
+  environment: production
+  tags:
+    - backend
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"'
+      when: on_success
+  before_script:
+    - echo "PORT=$GL_PORT" >> .env
+    - echo "DATABASE_URL='$GL_DATABASE_URL'" >> .env
+  dependencies:
+    - build
+  script:
+    - npx prisma migrate deploy
+    - rsync -a --exclude='.git' ./ /var/www/backend
+    - cd /var/www/backend
+    - bash ./update/update.sh
+
+deployToTesting: 
+  stage: deployToTesting
+  environment: production
+  tags:
+    - backend
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "dev"'
+      when: on_success
+  before_script:
+     - echo "PORT=$GL_TEST_PORT" >> .env
+     - echo "DATABASE_URL='$GL_TEST_DATABASE_URL'" >> .env
+  dependencies:
+    - build
+  script:
+    - npx prisma migrate deploy
+    - rsync -a --exclude='.git' ./ /var/www/backend-test
+    - cd /var/www/backend-test
+    - bash ./update/update.sh
