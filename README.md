@@ -1,73 +1,73 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Tele-Expertise Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project aims to develop a tele-expertise website to enable doctors to collaborate by sharing patient analysis results and obtaining second opinions from peers. By enhancing medical collaboration, the platform improves the accuracy of diagnoses and ultimately provides better patient care.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Doctor Registration:** Medical centers are responsible for registering doctors. Once registered, doctors can access the platform and create detailed profiles including their specialty, years of experience, and country of practice.
+  
+- **Doctor Search:** Doctors can search for specialists in their field or receive recommendations based on their specialty, experience, and location.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Chat System:** Doctors can initiate real-time discussions about patient analysis results with other doctors, exchanging medical insights and providing second opinions.
 
-## Installation
+- **Patient Analysis Uploads:** Doctors can upload patient analysis results (such as reports, scans, or test results) to facilitate discussion.
 
-```bash
-$ npm install
-```
+- **Second Opinion Requests:** Doctors can request second opinions on complex cases to enhance their diagnosis and treatment decisions.
 
-## Running the app
+- **Medical Center Management:** Only doctors registered by accredited medical centers can practice and use the platform.
 
-```bash
-# development
-$ npm run start
+## Technology Stack
 
-# watch mode
-$ npm run start:dev
+- **Frontend:** Next.js (React-based framework for server-side rendering)
+- **Backend:** NestJS (Node.js framework for building scalable backend applications)
+- **Database:** PostgreSQL (Relational database for storing doctor profiles, chat logs, and other data)
+- **Real-Time Communication:** WebSocket (For real-time chat functionality)
 
-# production mode
-$ npm run start:prod
-```
+## Getting Started
 
-## Test
+### Prerequisites
+
+To run this project locally, make sure you have the following installed:
+
+- Node.js (v16 or higher)
+- PostgreSQL
+- Docker (optional, for local database setup)
+
+### Installation
+
+#### 1. Clone the repository
 
 ```bash
-# unit tests
-$ npm run test
+git clone https://github.com/Gay-Grigoryan/tele-expertise-back
+cd tele-expertise-back
+```
+#### 2. Install dependencies
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```bash
+npm install
 ```
 
-## Support
+#### 3. Set up the database
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=tele_expertise
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
 
-## Stay in touch
+#### 4. Run the application locally
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm start
+```
+<p>The application will be live on <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> by default.</p>
 
-## License
+#### 5. Automatic Deployment (via GitHub Push)
 
-Nest is [MIT licensed](LICENSE).
+<p>This project is automatically built and deployed to production <strong>whenever changes are pushed to GitHub</strong>. Here’s how it works:</p>
+
+<ol>
+  <li><strong>GitHub Push</strong>: Once you push your code changes to the repository (usually to the <code>main</code> branch), the application will trigger the build and deployment automatically.</li>
+  <li><strong>Build and Deploy</strong>: The build process generates a production-ready version of the app, and the deployment is automatically handled by your hosting platform (e.g., <strong>Railway</strong>, <strong>Vercel</strong>, etc.).</li>
+  <li><strong>No Manual Steps</strong>: There is no need for manual intervention in the deployment process. Once the code is pushed to GitHub, the deployment will occur automatically.</li>
+</ol>
